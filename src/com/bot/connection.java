@@ -20,7 +20,7 @@ import net.dv8tion.jda.core.hooks.InterfacedEventManager;
 public class connection {
 	
 	final static Game game = Game.playing("Get Thinking! (Beta)");
-	final static String token = "NTA3NzI1MjU5NjE3NTk5NTA5.Dr07gw.pPqXZvTo0vypTd2pJNKPlC-RUVE";
+	final static String token = "///";
 
     public static void main(String[] args) throws LoginException, IOException, InvalidSyntaxException {
         new JDABuilder(AccountType.BOT)
