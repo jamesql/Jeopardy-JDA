@@ -3,7 +3,7 @@ package com.bot;
 import javax.security.auth.login.LoginException;
 import com.bot.api.getQ;
 import com.bot.commands.CommandListener;
-import com.bot.bfd.GuidListener;
+import com.bot.guilds.GuildListener;
 import argo.saj.InvalidSyntaxException;
 import net.dv8tion.jda.core.entities.Game;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class connection {
     public static void main(String[] args) throws LoginException, IOException, InvalidSyntaxException {
         new JDABuilder(AccountType.BOT)
                 .addEventListener(new CommandListener())
-		.addEventListener(new GuidListener())
+		.addEventListener(new GuildListener())
                 .setGame(game)
                 .setToken(token) 
                 .buildAsync(); 
