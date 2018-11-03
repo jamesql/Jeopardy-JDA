@@ -1,17 +1,14 @@
 package com.bot;
 
 import javax.security.auth.login.LoginException;
-
 import com.bot.api.getQ;
 import com.bot.commands.CommandListener;
-
+import com.bot.bfd.GuidListener;
 import argo.saj.InvalidSyntaxException;
 import net.dv8tion.jda.core.entities.Game;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.Event;
@@ -25,6 +22,7 @@ public class connection {
     public static void main(String[] args) throws LoginException, IOException, InvalidSyntaxException {
         new JDABuilder(AccountType.BOT)
                 .addEventListener(new CommandListener())
+		.addEventListener(new GuidListener())
                 .setGame(game)
                 .setToken(token) 
                 .buildAsync(); 
