@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DBC {
 
@@ -61,6 +62,12 @@ public class DBC {
 		 public void inputUser() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid) VALUES (0,0," + userid + ")");
+			 state.execute();
+		 }
+		 
+		 public void addCorrect() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement state = conn.prepareStatement("UPDATE level SET correct=" + (correct + 1) + " WHERE userid = '" + userid + "';");
 			 state.execute();
 		 }
 	
