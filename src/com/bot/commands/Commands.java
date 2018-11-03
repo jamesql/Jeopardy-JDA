@@ -1,11 +1,18 @@
 package com.bot.commands;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
+import com.bot.api.getQ;
 import com.bot.database.DBC;
+import com.bot.reactions.ReactionListener;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -22,6 +29,7 @@ public class Commands {
 	public Guild guild;
 	public JDA bot;
 	
+	
 	EmbedBuilder eb = new EmbedBuilder();
 	
 	public Commands(MessageReceivedEvent msg) {
@@ -35,7 +43,7 @@ public class Commands {
 	}
 	
 	public void pingCommand() {
-		eb.setTitle("Jepordy!");
+		eb.setTitle("Jeopardy!");
 		eb.addField("Pong!", "Response Time : " + GMsg.getJDA().getPing(), false);
 		eb.setFooter("Get Thinking!", null);
 		eb.setColor(Color.CYAN);
@@ -44,7 +52,7 @@ public class Commands {
 	}
 	
 	public void helpCommand() {
-		eb.setAuthor("Jepordy", null, null);
+		eb.setAuthor("Jeopardy", null, null);
 		eb.setTitle("Use j!q <Category> to generate a question!", null);
 		eb.setColor(Color.CYAN);
 		
@@ -55,10 +63,11 @@ public class Commands {
 		eb.setFooter("Get Thinking!", null);
 		
 		channel.sendMessage(eb.build()).queue();
+	
 	}
 	
 	public void statsCommand() throws Exception {
-		eb.setAuthor("Jepordy Stats", null, null);
+		eb.setAuthor("Jeopardy Stats", null, null);
 		eb.setColor(Color.CYAN);
 		DBC db = new DBC(user.getId());
 		eb.addField("Level", db.level + "", false);
@@ -67,6 +76,7 @@ public class Commands {
 		eb.setFooter("Get Thinking!", null);
 		
 		channel.sendMessage(eb.build()).queue();
+		
 	}
 	
 	public void question(String category) throws Exception {
@@ -90,12 +100,12 @@ public class Commands {
 		System.out.println(question.answer);
 		
 		channel.sendMessage(eb.build()).queue(m ->{
-			m.addReaction("\uD83C\uDDE6").queue();
+			m.addReaction("\uD83C\uDDE7").queue();
 			m.addReaction("\uD83C\uDDE7").queue();
 			m.addReaction("\uD83C\uDDE8").queue();
 			m.addReaction("\uD83C\uDDE9").queue();
+			bot.addEventListener(new ReactionListener(message.getAuthor().getId()));
+			
 		});
 	}
-	
-	
 }
