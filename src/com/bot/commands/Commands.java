@@ -80,6 +80,19 @@ public class Commands {
 		channel.sendMessage(eb.build()).queue();
 		
 	}
+	
+	public void statsDuo(String userId) throws Exception {
+		eb.setAuthor("Jeopardy Stats", null, null);
+		eb.setColor(Color.CYAN);
+		DBC db = new DBC(userId);
+		eb.addField("Level", db.level + "", false);
+		eb.addField("# Correct", db.correct + "", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
 	public void categorys()  {
 		eb.setAuthor("Jeopardy Categorys", null, null);
 		eb.setColor(Color.CYAN);
@@ -171,8 +184,6 @@ public class Commands {
 		break;
 		case " animations" : catg = 32;
 		break;
-		
-		
 		}
 		getQ question = new getQ(catg);
 		eb.addField("Category", question.ctgName, false);
@@ -185,7 +196,6 @@ public class Commands {
 		answers[3] = question.incAnswer[2];
 		List<String> a = Arrays.asList(answers);
 		Collections.shuffle(a);
-		
 		eb.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
 		eb.setFooter("Get Thinking!", null); 
 
