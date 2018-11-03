@@ -18,6 +18,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
 public class Commands {
 
@@ -27,8 +28,8 @@ public class Commands {
 	public User user;
 	public MessageChannel channel;
 	public Guild guild;
+	public Guild mainGuild;
 	public JDA bot;
-	
 	
 	EmbedBuilder eb = new EmbedBuilder();
 	
@@ -40,6 +41,7 @@ public class Commands {
 		channel = msg.getChannel();
 		guild = msg.getGuild();
 		bot = msg.getJDA();
+		mainGuild = bot.getGuildById("479518188711706627");
 	}
 	
 	public void pingCommand() {
@@ -98,14 +100,21 @@ public class Commands {
 		eb.setFooter("Get Thinking!", null); 
 
 		System.out.println(question.answer);
+		List<Emote> emote = mainGuild.getEmotes();
 		
+
 		channel.sendMessage(eb.build()).queue(m ->{
-			m.addReaction("\uD83C\uDDE7").queue();
-			m.addReaction("\uD83C\uDDE7").queue();
-			m.addReaction("\uD83C\uDDE8").queue();
-			m.addReaction("\uD83C\uDDE9").queue();
-			bot.addEventListener(new ReactionListener(message.getAuthor().getId()));
-			
+			m.addReaction(emote.get(0)).queue();
+			m.addReaction(emote.get(2)).queue();
+			m.addReaction(emote.get(1)).queue();
+			m.addReaction(emote.get(3)).queue();
+			int rightAns = 0;
+			for(int x = 0; x < a.size(); x++) {
+				if (a.get(x) == question.answer) {
+					rightAns = x;
+				}
+			}
+			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot));
 		});
 	}
 }
