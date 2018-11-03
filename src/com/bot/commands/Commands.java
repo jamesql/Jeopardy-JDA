@@ -204,7 +204,7 @@ public class Commands {
 					rightAns = x;
 				}
 			}
-			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot, channel));
+			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot, channel, question.answer));
 		});
 	}
 }
