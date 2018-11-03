@@ -37,7 +37,8 @@ public class CommandListener extends ListenerAdapter {
 	String q = prefix + "q";
 	String oStats = prefix + "stats ";
 	String categ = prefix + "categorys";
-	String lb = prefix + "lb";
+	String lb = prefix + "leaderboard";
+	String lbs = prefix + "lb";
 	
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -78,7 +79,7 @@ public class CommandListener extends ListenerAdapter {
 					if(mUser == null) cmd.statsCommand(); 
 					else cmd.statsDuo(mUser.getId());
 				}
-				if(message.getContentRaw().equalsIgnoreCase(lb)) cmd.lbCmd();
+				if(message.getContentRaw().equalsIgnoreCase(lb) ||  message.getContentRaw().equalsIgnoreCase(lbs)) cmd.lbCmd();
 			} catch (Exception e) {e.printStackTrace();}
 
         	}
