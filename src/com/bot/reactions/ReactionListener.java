@@ -97,7 +97,7 @@ public class ReactionListener extends ListenerAdapter {
 					
 					if (emote.getId().equals(global)) {
 						try {
-							DBC db = new DBC(user);
+							DBC db = new DBC(user, channel);
 							db.addCorrect();
 							correctResponse();
 						} catch (Exception e) {e.printStackTrace();}
