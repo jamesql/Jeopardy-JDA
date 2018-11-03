@@ -1,138 +1,236 @@
-package com.bot.database;
+package com.bot.commands;
 
 import java.awt.Color;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import com.bot.api.getQ;
+import com.bot.database.DBC;
+import com.bot.reactions.ReactionListener;
 
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
-public class DBC {
+public class Commands {
 
-		public String userid;
-		public int level;
-		public int correct;
-		private MessageChannel channel;
-		public String[][] arr = new String[10][2];
-		public int rank;
-		
-		public DBC(String user) throws Exception {
-			userid = user;
-			level = getLevel();
-			correct = getCorrect();
-			
-		}
-		
-		EmbedBuilder eb = new EmbedBuilder();
-		
-		public DBC(String user, MessageChannel chan) throws Exception {
-			userid = user;
-			level = getLevel();
-			correct = getCorrect();
-			channel = chan;
-			
-		}
+	public MessageReceivedEvent GMsg;
+	public Message message;
+	public String content;
+	public User user;
+	public MessageChannel channel;
+	public Guild guild;
+	public Guild mainGuild;
+	public JDA bot;
 	
-	 public Connection getConnection() throws Exception{
-		  try{
-		   String driver = "com.mysql.jdbc.Driver";
-		   String url = "jdbc:mysql://localhost:3306/jep";
-		   String username = "root";
-		   String password = "JagroshSucks1337";
-		   Class.forName(driver);
-		   
-		   Connection conn = DriverManager.getConnection(url,username,password);
-		   return conn;
-		  } catch(Exception e){System.out.println(e);}
-		  return null;
-		 }
-		 
-		 public String getUser() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement getName = conn.prepareStatement("SELECT userid FROM level WHERE userid='" + userid + "'"); 
-			 ResultSet res = getName.executeQuery();
-			 if(res.first()) return res.getString("userid"); 
-				 else return null;
-		 }
-		 
-		 public int getLevel() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement getName = conn.prepareStatement("SELECT level FROM level WHERE userid='" + userid + "'"); 
-			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
-				 return res.getInt("level");
-		 }else return 0;
+	EmbedBuilder eb = new EmbedBuilder();
+	
+	public Commands(MessageReceivedEvent msg) {
+		GMsg = msg;
+		message = msg.getMessage();
+		content = message.getContentRaw();
+		user = msg.getAuthor();
+		channel = msg.getChannel();
+		guild = msg.getGuild();
+		bot = msg.getJDA();
+		mainGuild = bot.getGuildById("479518188711706627");
+	}
+	
+	public void pingCommand() {
+		eb.setTitle("Jeopardy!");
+		eb.addField("Pong!", "Response Time : " + GMsg.getJDA().getPing(), false);
+		eb.setFooter("Get Thinking!", null);
+		eb.setColor(Color.CYAN);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	public void helpCommand() {
+		eb.setAuthor("Jeopardy", null, null);
+		eb.setTitle("Use j!q <Category> to generate a question!", null);
+		eb.setColor(Color.CYAN);
+		
+		eb.addField("j!categorys", "List of categorys", false);
+		eb.addField("j!stats", "Get your stats", false);
+		eb.addField("j!challenge", "Challenge your friends", false);
+		eb.addField("j!leaderboard", "Global leaderboard", false);
+		eb.addField("j!ping", "Test the bots connection", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	
+	}
+	
+	public void statsCommand() throws Exception {
+		eb.setAuthor("Jeopardy Stats", null, null);
+		eb.setColor(Color.CYAN);
+		DBC db = new DBC(user.getId());
+		eb.addField("Level", db.level + "", false);
+		eb.addField("# Correct", db.correct + "", false);
+		eb.addField("# Of Challenges Won", "Coming Soon!", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+		
+	}
+	
+	public void statsDuo(String userId) throws Exception {
+		eb.setAuthor("Jeopardy Stats", null, null);
+		eb.setColor(Color.CYAN);
+		DBC db = new DBC(userId);
+		eb.addField("Level", db.level + "", false);
+		eb.addField("# Correct", db.correct + "", false);
+		eb.addField("# Of Challenges Won", "Coming Soon!", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	public void categorys()  {
+		eb.setAuthor("Jeopardy Categorys", null, null);
+		eb.setColor(Color.CYAN);
+		eb.addField("General", "General\nMythology\nSports\nGeography\nHistory\nPolitics\nArt\nCelebrities\nAnimals\nVehicles", false);
+		eb.addField("Entertainment", "Books\nFilm\nMovies\nMusic\nMusicals\nTV\nVideo Games\nBoard Games\nCartoons\nComics\nAnime", false);
+		eb.addField("Science", "Nature\nMath\nComputers\nGadgets", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+		
+	}
+	
+	public void lbCmd() throws Exception {
+		eb.setAuthor("Jeopardy Leaderboard", null, null);
+		eb.setColor(Color.CYAN);
+		DBC db = new DBC(user.getId());
+		db.getLb();
+		eb.addField("Correct Answers Leaderboard", "1.) <@" + db.arr[0][0] + "> - " + db.arr[0][1] + "\n" + "2.) <@" + db.arr[1][0] + "> - " + db.arr[1][1] + "\n" + "3.) <@" + db.arr[2][0] + "> - " + db.arr[2][1] + "\n" + "4.) <@" + db.arr[3][0] + "> - " + db.arr[3][1] + "\n" + "5.) <@" + db.arr[4][0] + "> - " + db.arr[4][1] + "\n", false);
+		eb.addField("Your Ranking", user.getAsMention() + " - " + db.correct, false);
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	public void question(String category) throws Exception {
+		eb.setAuthor("Question", null, null);
+		eb.setColor(Color.CYAN);
+		int catg = 0;
+		System.out.println(category);
+		switch(category.toLowerCase()) {
+		case "" : catg = 0;
+		break;
+		case " general" : catg = 9;
+		break;		
+		case " books" : catg = 10;
+		break;
+		case " film" : catg = 11;
+		break;
+		case " movies" : catg = 11;
+		break;
+		case " music" : catg = 12;
+		break;
+		case " musicals" : catg = 13;
+		break;
+		case " musical" : catg = 13;
+		break;
+		case " tv" : catg = 14;
+		break;
+		case " television" : catg = 14;
+		break;
+		case " video games" : catg = 15;
+		break;
+		case " video game" : catg = 15;
+		break;
+		case " videogames" : catg = 15;
+		break;
+		case " board games" : catg = 16;
+		break;
+		case " board game" : catg = 16;
+		break;
+		case " nature" : catg = 17;
+		break;
+		case " computers" : catg = 18;
+		break;
+		case " computer" : catg = 18;
+		break;
+		case " math" : catg = 19;
+		break;
+		case " mythology" : catg = 20;
+		break;
+		case " sports" : catg = 21;
+		break;
+		case " sport" : catg = 21;
+		break;
+		case " geography" : catg = 22;
+		break;
+		case " history" : catg = 23;
+		break;
+		case " politics" : catg = 24;
+		break;
+		case " art" : catg = 25;
+		break;
+		case " celebrities" : catg = 26;
+		break;
+		case " animals" : catg = 27;
+		break;
+		case " vehicles" : catg = 28;
+		break;
+		case " cars" : catg = 28;
+		break;
+		case " comics" : catg = 29;
+		break;
+		case " gadgets" : catg = 30;
+		break;
+		case " anime" : catg = 31;
+		break;
+		case " manga" : catg = 31;
+		break;
+		case " cartoons" : catg = 32;
+		break;
+		case " animations" : catg = 32;
+		break;
 		}
-		 
-		 public int getCorrect() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement getName = conn.prepareStatement("SELECT correct FROM level WHERE userid='" + userid + "'"); 
-			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
-				 return res.getInt("correct");
-		 }else return 0;
-		}
-		 
-		 public void inputUser() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid) VALUES (0,0," + userid + ")");
-			 state.execute();
-			 conn.close();
-		 }
-		 
-		 public void addCorrect() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("UPDATE level SET correct=" + (correct + 1) + " WHERE userid = '" + userid + "';");
-			 state.execute();
-			 if (correct % 15 == 0) {
-				 addLevel();
-					eb.setTitle("Jeopardy Rank Up!");
-					eb.addField("Level Up!", "You are now level " + (level + 1), false);
-					eb.setFooter("Get Thinking!", null);
-					eb.setColor(Color.CYAN);
-					
-					channel.sendMessage(eb.build()).queue(m ->{
-						m.addReaction("\uD83C\uDF89").queue();
-					});
-			 }
-			 conn.close();
-		 }
-		 
-		 public void addLevel() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("UPDATE level SET level=" + (level + 1) + " WHERE userid = '" + userid + "';");
-			 state.execute();
-			 conn.close();
-		 }
-		 
-		 public void getLb() throws Exception {
-			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("SELECT correct,userid FROM level ORDER BY -correct");
-			 ResultSet res = state.executeQuery();
-			 res.beforeFirst();
-			 res.next();
-			 arr[0][0] = res.getString("userid");
-			 arr[0][1] = Integer.toString(res.getInt("correct"));
-			 for(int x = 0; x < 5; x++) {
-				 res.next();
-				 arr[x][0] = res.getString("userid");
-				 arr[x][1] = Integer.toString(res.getInt("correct"));
-			 }
-			 res.first();
-			 rank = 1;
-			 String currentId = res.getString("userid");
-			 while(currentId != userid) {
-				res.next();
-				if (res.isAfterLast())  {
-						rank = 1;
-						currentId = userid;
-				}else{
-				currentId = res.getString("userid");
-				rank++;
-			 }
-		 } 
+		getQ question = new getQ(catg);
+		eb.addField("Category", question.ctgName, false);
+		eb.addField("Difficulty", question.difficulty, false);
+		eb.addField("Question", question.question, false);
+		String[] answers = new String[4];
+		answers[0] = question.answer;
+		answers[1] = question.incAnswer[0];
+		answers[2] = question.incAnswer[1];
+		answers[3] = question.incAnswer[2];
+		List<String> a = Arrays.asList(answers);
+		Collections.shuffle(a);
+		eb.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
+		eb.setFooter("Get Thinking!", null); 
+
+		System.out.println(question.answer);
+		List<Emote> emote = mainGuild.getEmotes();
+		
+
+		channel.sendMessage(eb.build()).queue(m ->{
+			m.addReaction(emote.get(0)).queue();
+			m.addReaction(emote.get(2)).queue();
+			m.addReaction(emote.get(1)).queue();
+			m.addReaction(emote.get(3)).queue();
+			int rightAns = 0;
+			for(int x = 0; x < a.size(); x++) {
+				if (a.get(x) == question.answer) {
+					rightAns = x;
+				}
+			}
+			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot, channel, question.answer));
+		});
 	}
 }
