@@ -1,12 +1,15 @@
 package com.bot.reactions;
 
+import java.awt.Color;
 import java.util.List;
 
 import com.bot.database.DBC;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.MessageReaction.ReactionEmote;
 import net.dv8tion.jda.core.entities.User;
@@ -22,17 +25,42 @@ public class ReactionListener extends ListenerAdapter {
 	private String dVar = "508121771132846090";
 	private String global;
 	private JDA bot;
+	private MessageChannel channel;
 	
 	
 	boolean answered = false;
 	String user;
 	int rightAns;
 	
-	public ReactionListener(String userid, int right, JDA jda) {
+	EmbedBuilder eb = new EmbedBuilder();
+	
+	public ReactionListener(String userid, int right, JDA jda,  MessageChannel inputChannel) {
 		user = userid;
 		rightAns = right;
 		bot = jda;
+		channel = inputChannel;
 	}
+	
+	
+	public void correctResponse() {
+		eb.setTitle("Nice!");
+		eb.addField("You Answered Correct", "+1 Correct Answer!", false);
+		eb.setFooter("Get Thinking!", null);
+		eb.setColor(Color.CYAN);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	public void wrongResponse() {
+		eb.setTitle("Try Again!");
+		eb.addField("You Answered Wrong", "Better luck next time!", false);
+		eb.setFooter("Get Thinking!", null);
+		eb.setColor(Color.CYAN);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	
 	
 	@Override
 	public void onMessageReactionAdd(MessageReactionAddEvent event) {
@@ -68,7 +96,10 @@ public class ReactionListener extends ListenerAdapter {
 						try {
 							DBC db = new DBC(user);
 							db.addCorrect();
+							correctResponse();
 						} catch (Exception e) {e.printStackTrace();}
+					}else{
+						wrongResponse();
 					}
 				
 					answered = true;
