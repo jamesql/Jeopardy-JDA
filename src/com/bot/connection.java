@@ -24,9 +24,9 @@ public class connection {
 
     public static void main(String[] args) throws LoginException, IOException, InvalidSyntaxException {
         new JDABuilder(AccountType.BOT)
-                .addEventListener(new CommandListener()) // Register the author-exclusive eval command
+                .addEventListener(new CommandListener())
                 .setGame(game)
-                .setToken(token) // Set the Authentication Token
-                .buildAsync(); // Finally establish a connection to Discord's servers!
+                .setToken(token) 
+                .buildAsync(); 
     }
 }
