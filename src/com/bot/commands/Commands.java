@@ -60,6 +60,8 @@ public class Commands {
 		
 		eb.addField("j!categorys", "List of categorys", false);
 		eb.addField("j!stats", "Get your stats", false);
+		eb.addField("j!challenge", "Challenge your friends", false);
+		eb.addField("j!leaderboard", "Global leaderboard", false);
 		eb.addField("j!ping", "Test the bots connection", false);
 		
 		eb.setFooter("Get Thinking!", null);
@@ -74,6 +76,7 @@ public class Commands {
 		DBC db = new DBC(user.getId());
 		eb.addField("Level", db.level + "", false);
 		eb.addField("# Correct", db.correct + "", false);
+		eb.addField("# Of Challenges Won", "Coming Soon!", false);
 		
 		eb.setFooter("Get Thinking!", null);
 		
@@ -87,6 +90,7 @@ public class Commands {
 		DBC db = new DBC(userId);
 		eb.addField("Level", db.level + "", false);
 		eb.addField("# Correct", db.correct + "", false);
+		eb.addField("# Of Challenges Won", "Coming Soon!", false);
 		
 		eb.setFooter("Get Thinking!", null);
 		
