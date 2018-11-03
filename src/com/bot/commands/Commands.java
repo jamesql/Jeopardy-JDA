@@ -80,11 +80,101 @@ public class Commands {
 		channel.sendMessage(eb.build()).queue();
 		
 	}
+	public void categorys()  {
+		eb.setAuthor("Jeopardy Categorys", null, null);
+		eb.setColor(Color.CYAN);
+		eb.addField("General", "General\nMythology\nSports\nGeography\nHistory\nPolitics\nArt\nCelebrities\nAnimals\nVehicles", false);
+		eb.addField("Entertainment", "Books\nFilm\nMovies\nMusic\nMusicals\nTV\nVideo Games\nBoard Games\nCartoons\nComics\nAnime", false);
+		eb.addField("Science", "Nature\nMath\nComputers\nGadgets", false);
+		
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+		
+	}
 	
 	public void question(String category) throws Exception {
 		eb.setAuthor("Question", null, null);
 		eb.setColor(Color.CYAN);
-		getQ question = new getQ(0);
+		int catg = 0;
+		System.out.println(category);
+		switch(category.toLowerCase()) {
+		case "" : catg = 0;
+		break;
+		case " general" : catg = 9;
+		break;		
+		case " books" : catg = 10;
+		break;
+		case " film" : catg = 11;
+		break;
+		case " movies" : catg = 11;
+		break;
+		case " music" : catg = 12;
+		break;
+		case " musicals" : catg = 13;
+		break;
+		case " musical" : catg = 13;
+		break;
+		case " tv" : catg = 14;
+		break;
+		case " television" : catg = 14;
+		break;
+		case " video games" : catg = 15;
+		break;
+		case " video game" : catg = 15;
+		break;
+		case " videogames" : catg = 15;
+		break;
+		case " board games" : catg = 16;
+		break;
+		case " board game" : catg = 16;
+		break;
+		case " nature" : catg = 17;
+		break;
+		case " computers" : catg = 18;
+		break;
+		case " computer" : catg = 18;
+		break;
+		case " math" : catg = 19;
+		break;
+		case " mythology" : catg = 20;
+		break;
+		case " sports" : catg = 21;
+		break;
+		case " sport" : catg = 21;
+		break;
+		case " geography" : catg = 22;
+		break;
+		case " history" : catg = 23;
+		break;
+		case " politics" : catg = 24;
+		break;
+		case " art" : catg = 25;
+		break;
+		case " celebrities" : catg = 26;
+		break;
+		case " animals" : catg = 27;
+		break;
+		case " vehicles" : catg = 28;
+		break;
+		case " cars" : catg = 28;
+		break;
+		case " comics" : catg = 29;
+		break;
+		case " gadgets" : catg = 30;
+		break;
+		case " anime" : catg = 31;
+		break;
+		case " manga" : catg = 31;
+		break;
+		case " cartoons" : catg = 32;
+		break;
+		case " animations" : catg = 32;
+		break;
+		
+		
+		}
+		getQ question = new getQ(catg);
 		eb.addField("Category", question.ctgName, false);
 		eb.addField("Difficulty", question.difficulty, false);
 		eb.addField("Question", question.question, false);
@@ -114,7 +204,7 @@ public class Commands {
 					rightAns = x;
 				}
 			}
-			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot));
+			bot.addEventListener(new ReactionListener(message.getAuthor().getId(), rightAns, bot, channel));
 		});
 	}
 }
