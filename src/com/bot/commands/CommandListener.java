@@ -34,6 +34,9 @@ public class CommandListener extends ListenerAdapter {
 	String pingCmd = prefix + "ping";
 	String helpCmd = prefix + "help";
 	String stats = prefix + "stats";
+	String q = prefix + "q";
+	String oStats = prefix + "stats ";
+	String categ = prefix + "categorys";
 	
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -49,8 +52,6 @@ public class CommandListener extends ListenerAdapter {
         Message message = event.getMessage();           //The message that was received.
         MessageChannel channel = event.getChannel();    //This is the MessageChannel that the message was sent to.
         Guild guild = event.getGuild();                 //  This could be a TextChannel, PrivateChannel, or Group!
-
-
 		
         
         String msg = message.getContentDisplay();              //This returns a human readable version of the Message. Similar to
@@ -69,6 +70,13 @@ public class CommandListener extends ListenerAdapter {
 				if (message.getContentRaw().equalsIgnoreCase(helpCmd)) cmd.helpCommand();
 				if (message.getContentRaw().equalsIgnoreCase(stats)) cmd.statsCommand();
 				if (message.getContentRaw().equalsIgnoreCase(pingCmd)) cmd.pingCommand();
+				if (message.getContentRaw().startsWith(q)) cmd.question(message.getContentRaw().substring(3));
+				if (message.getContentRaw().equalsIgnoreCase(categ)) cmd.categorys();
+				if (message.getContentRaw().startsWith(oStats)){
+					User mUser = message.getMentionedUsers().get(0);
+					if(mUser == null) cmd.statsCommand(); 
+					else cmd.statsDuo(mUser.getId());
+				}
 			} catch (Exception e) {e.printStackTrace();}
 
         	}
