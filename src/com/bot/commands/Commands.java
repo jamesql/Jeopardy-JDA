@@ -110,6 +110,18 @@ public class Commands {
 		
 	}
 	
+	public void lbCmd() throws Exception {
+		eb.setAuthor("Jeopardy Leaderboard", null, null);
+		eb.setColor(Color.CYAN);
+		DBC db = new DBC(user.getId());
+		db.getLb();
+		eb.addField("Correct Answers Leaderboard", "1.) <@" + db.arr[0][0] + "> - " + db.arr[0][1] + "\n" + "2.) <@" + db.arr[1][0] + "> - " + db.arr[1][1] + "\n" + "3.) <@" + db.arr[2][0] + "> - " + db.arr[2][1] + "\n" + "4.) <@" + db.arr[3][0] + "> - " + db.arr[3][1] + "\n" + "5.) <@" + db.arr[4][0] + "> - " + db.arr[4][1] + "\n", false);
+		eb.addField("Your Ranking", db.rank + ".) " + user.getAsMention() + " - " + db.correct, false);
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
 	public void question(String category) throws Exception {
 		eb.setAuthor("Question", null, null);
 		eb.setColor(Color.CYAN);
