@@ -69,5 +69,33 @@ public class Commands {
 		channel.sendMessage(eb.build()).queue();
 	}
 	
+	public void question(String category) throws Exception {
+		eb.setAuthor("Question", null, null);
+		eb.setColor(Color.CYAN);
+		getQ question = new getQ(0);
+		eb.addField("Category", question.ctgName, false);
+		eb.addField("Difficulty", question.difficulty, false);
+		eb.addField("Question", question.question, false);
+		String[] answers = new String[4];
+		answers[0] = question.answer;
+		answers[1] = question.incAnswer[0];
+		answers[2] = question.incAnswer[1];
+		answers[3] = question.incAnswer[2];
+		List<String> a = Arrays.asList(answers);
+		Collections.shuffle(a);
+		
+		eb.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
+		eb.setFooter("Get Thinking!", null); 
+
+		System.out.println(question.answer);
+		
+		channel.sendMessage(eb.build()).queue(m ->{
+			m.addReaction("\uD83C\uDDE6").queue();
+			m.addReaction("\uD83C\uDDE7").queue();
+			m.addReaction("\uD83C\uDDE8").queue();
+			m.addReaction("\uD83C\uDDE9").queue();
+		});
+	}
+	
 	
 }
