@@ -31,14 +31,16 @@ public class ReactionListener extends ListenerAdapter {
 	boolean answered = false;
 	String user;
 	int rightAns;
+	private String rightString;
 	
 	EmbedBuilder eb = new EmbedBuilder();
 	
-	public ReactionListener(String userid, int right, JDA jda,  MessageChannel inputChannel) {
+	public ReactionListener(String userid, int right, JDA jda,  MessageChannel inputChannel, String rightAnswer) {
 		user = userid;
 		rightAns = right;
 		bot = jda;
 		channel = inputChannel;
+		rightString = rightAnswer;
 	}
 	
 	
@@ -54,6 +56,7 @@ public class ReactionListener extends ListenerAdapter {
 	public void wrongResponse() {
 		eb.setTitle("Try Again!");
 		eb.addField("You Answered Wrong", "Better luck next time!", false);
+		eb.addField("Correct Answer :", "" + rightString, false);
 		eb.setFooter("Get Thinking!", null);
 		eb.setColor(Color.CYAN);
 		
