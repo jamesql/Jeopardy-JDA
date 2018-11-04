@@ -31,6 +31,8 @@ public class Commands {
 	public Guild mainGuild;
 	public JDA bot;
 	
+	public String[] lbIds = new String[10];
+	
 	EmbedBuilder eb = new EmbedBuilder();
 	
 	public Commands(MessageReceivedEvent msg) {
@@ -115,7 +117,17 @@ public class Commands {
 		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		DBC db = new DBC(user.getId());
 		db.getLb();
-		eb.addField("Correct Answers Leaderboard", "1.) <@" + db.arr[0][0] + "> - " + db.arr[0][1] + "\n" + "2.) <@" + db.arr[1][0] + "> - " + db.arr[1][1] + "\n" + "3.) <@" + db.arr[2][0] + "> - " + db.arr[2][1] + "\n" + "4.) <@" + db.arr[3][0] + "> - " + db.arr[3][1] + "\n" + "5.) <@" + db.arr[4][0] + "> - " + db.arr[4][1] + "\n", false);
+		lbIds[0] = db.arr[0][0];
+		lbIds[1] = db.arr[1][0];
+		lbIds[2] = db.arr[2][0];
+		lbIds[3] = db.arr[3][0];
+		lbIds[4] = db.arr[4][0];
+		User lb1 = bot.getUserById(lbIds[0]);
+		User lb2 = bot.getUserById(lbIds[1]);
+		User lb3 = bot.getUserById(lbIds[2]);
+		User lb4 = bot.getUserById(lbIds[3]);
+		User lb5 = bot.getUserById(lbIds[4]);
+		eb.addField("Correct Answers Leaderboard", "1.) " + lb1.getName() + "#" + lb1.getDiscriminator() + " - " + db.arr[0][1] + "\n" + "2.) " + lb2.getName() + "#" + lb2.getDiscriminator() + " - " + db.arr[1][1] + "\n" + "3.) " + lb3.getName() + "#" + lb3.getDiscriminator() + " - " + db.arr[2][1] + "\n" + "4.) " + lb4.getName() + "#" + lb4.getDiscriminator() + " - " + db.arr[3][1] + "\n" + "5.) " + lb5.getName() + "#" + lb5.getDiscriminator() + " - " + db.arr[4][1] + "\n", false);
 		eb.addField("Your Ranking", user.getAsMention() + " - " + db.correct, false);
 		eb.setFooter("Get Thinking!", null);
 		
