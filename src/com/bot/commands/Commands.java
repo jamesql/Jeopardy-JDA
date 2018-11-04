@@ -48,7 +48,7 @@ public class Commands {
 		eb.setTitle("Jeopardy!");
 		eb.addField("Pong!", "Response Time : " + GMsg.getJDA().getPing(), false);
 		eb.setFooter("Get Thinking!", null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		
 		channel.sendMessage(eb.build()).queue();
 	}
@@ -56,7 +56,7 @@ public class Commands {
 	public void helpCommand() {
 		eb.setAuthor("Jeopardy", null, null);
 		eb.setTitle("Use j!q <Category> to generate a question!", null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		
 		eb.addField("j!categorys", "List of categorys", false);
 		eb.addField("j!stats", "Get your stats", false);
@@ -72,7 +72,7 @@ public class Commands {
 	
 	public void statsCommand() throws Exception {
 		eb.setAuthor("Jeopardy Stats", null, null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		DBC db = new DBC(user.getId());
 		eb.addField("Level", db.level + "", false);
 		eb.addField("# Correct", db.correct + "", false);
@@ -86,7 +86,7 @@ public class Commands {
 	
 	public void statsDuo(String userId) throws Exception {
 		eb.setAuthor("Jeopardy Stats", null, null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		DBC db = new DBC(userId);
 		eb.addField("Level", db.level + "", false);
 		eb.addField("# Correct", db.correct + "", false);
@@ -99,7 +99,7 @@ public class Commands {
 	
 	public void categorys()  {
 		eb.setAuthor("Jeopardy Categorys", null, null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		eb.addField("General", "General\nMythology\nSports\nGeography\nHistory\nPolitics\nArt\nCelebrities\nAnimals\nVehicles", false);
 		eb.addField("Entertainment", "Books\nFilm\nMovies\nMusic\nMusicals\nTV\nVideo Games\nBoard Games\nCartoons\nComics\nAnime", false);
 		eb.addField("Science", "Nature\nMath\nComputers\nGadgets", false);
@@ -112,7 +112,7 @@ public class Commands {
 	
 	public void lbCmd() throws Exception {
 		eb.setAuthor("Jeopardy Leaderboard", null, null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		DBC db = new DBC(user.getId());
 		db.getLb();
 		eb.addField("Correct Answers Leaderboard", "1.) <@" + db.arr[0][0] + "> - " + db.arr[0][1] + "\n" + "2.) <@" + db.arr[1][0] + "> - " + db.arr[1][1] + "\n" + "3.) <@" + db.arr[2][0] + "> - " + db.arr[2][1] + "\n" + "4.) <@" + db.arr[3][0] + "> - " + db.arr[3][1] + "\n" + "5.) <@" + db.arr[4][0] + "> - " + db.arr[4][1] + "\n", false);
@@ -124,7 +124,7 @@ public class Commands {
 	
 	public void question(String category) throws Exception {
 		eb.setAuthor("Question", null, null);
-		eb.setColor(Color.CYAN);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		int catg = 0;
 		System.out.println(category);
 		switch(category.toLowerCase()) {
