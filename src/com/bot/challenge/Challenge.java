@@ -11,7 +11,7 @@ public class Challenge {
 	JDA bot;
 	MessageChannel channel;
 	
-	public Challenge(User p1, User p2, MessageChannel ch, JDA self) {
+	public Challenge(User p1, User p2, MessageChannel ch, JDA self, int cat) {
 		player1 = p1;
 		player2 = p2;
 		channel = ch;
