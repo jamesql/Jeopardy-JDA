@@ -1,6 +1,7 @@
 # Jeopardy-JDA
 [![Bots for Discord](https://botsfordiscord.com/api/bot/507725259617599509/widget)](https://botsfordiscord.com/bots/507725259617599509)
 [![DBL](https://discordbots.org/api/widget/507725259617599509.svg)](https://discordbots.org/bot/507725259617599509)
+<center>Click on any of the two widgets above to invite the bot!</center>
 # Description
 An open sourced JDA bot by Big Smitteh#7650! Get quizzed on your favorite subjects! Level up & earn prizes for answering questions right!
 
