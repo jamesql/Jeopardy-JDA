@@ -1,5 +1,7 @@
 package com.bot.challenge;
 
-public class ChalListener {
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+public class ChalListener extends ListenerAdapter {
 
 }
