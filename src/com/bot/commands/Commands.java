@@ -143,9 +143,88 @@ public class Commands {
 	
 	public void challengeStart(User su, String category) throws IOException, InvalidSyntaxException {
 		int cat = 0;
+		if (category.contains("general")) {
+			cat = 9;
+		}
+		if (category.contains("books")) {
+			cat = 10;
+		}
+		if (category.contains("films")) {
+			cat = 11;
+		}
+		if (category.contains("movies")) {
+			cat = 11;
+		}
+		if (category.contains("music") && !category.contains("musicals")) {
+			cat = 12;
+		}
+		if (category.contains("musicals")) {
+			cat = 13;
+		}
+		if (category.contains("tv")) {
+			cat = 14;
+		}
+		if (category.contains("television")) {
+			cat = 14;
+		}
+		if (category.contains("video")) {
+			cat = 15;
+		}
+		if (category.contains("board")) {
+			cat = 16;
+		}
+		if (category.contains("nature")) {
+			cat = 17;
+		}
+		if (category.contains("computer")) {
+			cat = 18;
+		}
+		if (category.contains("math")) {
+			cat = 19;
+		}
+		if (category.contains("mythology")) {
+			cat = 20;
+		}
 		if (category.contains("sports")) {
 			cat = 21;
 		}
+		if (category.contains("geography")) {
+			cat = 22;
+		}
+		if (category.contains("history")) {
+			cat = 23;
+		}
+		if (category.contains("politic")) {
+			cat = 24;
+		}
+		if (category.contains("art")) {
+			cat = 25;
+		}
+		if (category.contains("celebritie")) {
+			cat = 26;
+		}
+		if (category.contains("animals")) {
+			cat = 27;
+		}
+		if (category.contains("vehicle")) {
+			cat = 28;
+		}
+		if (category.contains("car")) {
+			cat = 28;
+		}
+		if (category.contains("comic")) {
+			cat = 29;
+		}
+		if (category.contains("gadget")) {
+			cat = 30;
+		}
+		if (category.contains("anime")) {
+			cat = 31;
+		}
+		if (category.contains("cartoon")) {
+			cat = 32;
+		}
+		
 		bot.addEventListener(new ChalListener(user, su, channel, bot, cat));
 		
 	}
