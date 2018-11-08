@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.bot.database.DBC;
 
 import net.dv8tion.jda.client.entities.Group;
@@ -36,9 +38,10 @@ public class CommandListener extends ListenerAdapter {
 	String stats = prefix + "stats";
 	String q = prefix + "q";
 	String oStats = prefix + "stats ";
-	String categ = prefix + "categorys";
+	String categ = prefix + "categories";
 	String lb = prefix + "leaderboard";
 	String lbs = prefix + "lb";
+	String chal = prefix + "challenge";
 	
     @Override
     public void onMessageReceived(MessageReceivedEvent event)
@@ -62,6 +65,7 @@ public class CommandListener extends ListenerAdapter {
         boolean bot = author.isBot();                    //This boolean is useful to determine if the User that
        if(message.getContentRaw().startsWith(prefix)){
            DBC db;
+           System.out.println(author.getName() + author.getDiscriminator() + " : " + message.getContentRaw());
    		try {
    			db = new DBC(author.getId());
         if (!bot) {
@@ -81,7 +85,14 @@ public class CommandListener extends ListenerAdapter {
 				}
 				if(message.getContentRaw().equalsIgnoreCase(lb) ||  message.getContentRaw().equalsIgnoreCase(lbs)) cmd.lbCmd();
 			} catch (Exception e) {e.printStackTrace();}
-
+        	if (message.getContentRaw().startsWith(chal)) {
+        			
+        			if (message.getMentionedUsers().size() == 0 || message.getMentionedUsers().size() > 1) cmd.chalerror1();
+        			else {
+        				User mention = message.getMentionedUsers().get(0);
+        				cmd.challengeStart(mention, message.getContentRaw());
+        			}
+        		}
         	}
 		}
    		catch (Exception e1) {e1.printStackTrace();}
