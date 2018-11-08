@@ -133,7 +133,7 @@ public class DBC {
 			 PreparedStatement getName = conn.prepareStatement("SELECT tie FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
 			 if(res.next()){
-				 return res.getInt("ties");
+				 return res.getInt("tie");
 		 }else return 0;
 		}
 		 
