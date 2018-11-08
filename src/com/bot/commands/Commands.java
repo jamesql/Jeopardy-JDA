@@ -1,15 +1,19 @@
 package com.bot.commands;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import com.bot.api.getQ;
+import com.bot.challenge.ChalListener;
+import com.bot.challenge.Challenge;
 import com.bot.database.DBC;
 import com.bot.reactions.ReactionListener;
 
+import argo.saj.InvalidSyntaxException;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Emote;
@@ -60,7 +64,7 @@ public class Commands {
 		eb.setTitle("Use j!q <Category> to generate a question!", null);
 		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		
-		eb.addField("j!categorys", "List of categorys", false);
+		eb.addField("j!categories", "List of categories", false);
 		eb.addField("j!stats", "Get your stats", false);
 		eb.addField("j!challenge", "Challenge your friends", false);
 		eb.addField("j!leaderboard", "Global leaderboard", false);
@@ -100,7 +104,7 @@ public class Commands {
 	}
 	
 	public void categorys()  {
-		eb.setAuthor("Jeopardy Categorys", null, null);
+		eb.setAuthor("Jeopardy Categories", null, null);
 		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
 		eb.addField("General", "General\nMythology\nSports\nGeography\nHistory\nPolitics\nArt\nCelebrities\nAnimals\nVehicles", false);
 		eb.addField("Entertainment", "Books\nFilm\nMovies\nMusic\nMusicals\nTV\nVideo Games\nBoard Games\nCartoons\nComics\nAnime", false);
@@ -111,6 +115,8 @@ public class Commands {
 		channel.sendMessage(eb.build()).queue();
 		
 	}
+	
+	
 	
 	public void lbCmd() throws Exception {
 		eb.setAuthor("Jeopardy Leaderboard", null, null);
@@ -129,6 +135,25 @@ public class Commands {
 		User lb5 = bot.getUserById(lbIds[4]);
 		eb.addField("Correct Answers Leaderboard", "1.) " + lb1.getName() + "#" + lb1.getDiscriminator() + " - " + db.arr[0][1] + "\n" + "2.) " + lb2.getName() + "#" + lb2.getDiscriminator() + " - " + db.arr[1][1] + "\n" + "3.) " + lb3.getName() + "#" + lb3.getDiscriminator() + " - " + db.arr[2][1] + "\n" + "4.) " + lb4.getName() + "#" + lb4.getDiscriminator() + " - " + db.arr[3][1] + "\n" + "5.) " + lb5.getName() + "#" + lb5.getDiscriminator() + " - " + db.arr[4][1] + "\n", false);
 		eb.addField("Your Ranking", user.getAsMention() + " - " + db.correct, false);
+		eb.setFooter("Get Thinking!", null);
+		
+		channel.sendMessage(eb.build()).queue();
+	}
+	
+	public void challengeStart(User su, String category) throws IOException, InvalidSyntaxException {
+		int cat = 0;
+		if (category.contains("sports")) {
+			cat = 21;
+		}
+		bot.addEventListener(new ChalListener(user, su, channel, bot, cat));
+		
+	}
+	
+	public void chalerror1(){
+		eb.setAuthor("Jeopardy Challenge Error", null, null);
+		eb.setColor(guild.getMember(bot.getSelfUser()).getColor());
+		eb.addField("Error", "You need to mention another user to do this!", false);
+		
 		eb.setFooter("Get Thinking!", null);
 		
 		channel.sendMessage(eb.build()).queue();
