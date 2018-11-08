@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.bot.api.getQ;
+import com.bot.database.DBC;
 
 import argo.saj.InvalidSyntaxException;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -78,6 +79,7 @@ public class ChalListener extends ListenerAdapter {
 		eb1.setTitle("Jeopardy Challenge");
 		eb1.addField("Category", question.ctgName, false);
 		eb1.addField("Difficulty", question.getDif(), false);
+		eb1.setFooter("Get Thinking!", null);
 		eb1.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
 		channel.sendMessage(eb1.build()).queue(m -> {
 			List<Emote> emote = mainGuild.getEmotes();
@@ -96,25 +98,32 @@ public class ChalListener extends ListenerAdapter {
 	public void sendReadyResponse() {
 		eb2.setTitle("Challenge has been started");
 		eb2.addField("How to accept", "React when ready!", false);
+		eb2.setFooter("Get Thinking!", null);
 		channel.sendMessage(eb2.build()).queue(m -> {
 			List<Emote> emote = mainGuild.getEmotes();
 			m.addReaction(emote.get(0)).queue();
 		});
 	}
 	
-	public void validate() {
+	public void validate() throws Exception {
+		DBC player1db = new DBC(player1.getId());
+		DBC player2db = new DBC(player2.getId());
 		// tie
 		if (right1 && right2) {
 			eb3.setAuthor("Challenge Results", null, null);
 			eb3.setColor(Color.CYAN);
 			eb3.setTitle("Jeopardy Challenge");
 			eb3.addField("It's a tie!", "Good job " + player1.getAsMention() + " & " + player2.getAsMention() + "!", false);
+			player1db.addTie();
+			player2db.addTie();
 		}
 		if (right1 && !right2) {
 			eb3.setAuthor("Challenge Results", null, null);
 			eb3.setColor(Color.CYAN);
 			eb3.setTitle("Jeopardy Challenge");
 			eb3.addField(player1.getName() + " Wins!", "Better luck next time " + player2.getAsMention() + "!", false);
+			player1db.addWin();
+			player2db.addLose();
 		}
 		
 		if (!right1 && right2) {
@@ -122,6 +131,7 @@ public class ChalListener extends ListenerAdapter {
 			eb3.setColor(Color.CYAN);
 			eb3.setTitle("Jeopardy Challenge");
 			eb3.addField(player2.getName() + " Wins!", "Better luck next time " + player1.getAsMention() + "!", false);
+			player1db.addLose();
 		}
 		// Both Lose
 		if (!right1 && !right2) {
@@ -129,7 +139,10 @@ public class ChalListener extends ListenerAdapter {
 			eb3.setColor(Color.CYAN);
 			eb3.setTitle("Jeopardy Challenge");
 			eb3.addField("Everyone loses!", "Better luck next time " + player1.getAsMention() + " & " + player2.getAsMention() + "!", false);
+			player1db.addLose();
+			player2db.addLose();
 		}
+		eb3.setFooter("Get Thinking!", null);
 		channel.sendMessage(eb3.build()).queue();
 	}
 
@@ -200,7 +213,9 @@ public class ChalListener extends ListenerAdapter {
 			}
 			
 			if (answered1 && answered2) {
-				validate();
+				try {
+					validate();
+				}catch (Exception e){e.printStackTrace();}
 			}
 			
 		}
