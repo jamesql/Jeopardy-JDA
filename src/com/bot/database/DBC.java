@@ -18,6 +18,9 @@ public class DBC {
 		private MessageChannel channel;
 		public String[][] arr = new String[10][2];
 		public int rank;
+		public int wins;
+		public int lose;
+		public int ties;
 		
 		public DBC(String user) throws Exception {
 			userid = user;
@@ -33,6 +36,9 @@ public class DBC {
 			level = getLevel();
 			correct = getCorrect();
 			channel = chan;
+			wins = getWin();
+			lose = getLose();
+			ties = getTies();
 			
 		}
 	
@@ -78,7 +84,7 @@ public class DBC {
 		 
 		 public void inputUser() throws Exception {
 			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid) VALUES (0,0," + userid + ")");
+			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid,wins,lose,ties) VALUES (0,0," + userid + ",0,0,0)");
 			 state.execute();
 			 conn.close();
 		 }
@@ -101,6 +107,54 @@ public class DBC {
 			 conn.close();
 		 }
 		 
+		 public int getWin() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement getName = conn.prepareStatement("SELECT wins FROM level WHERE userid='" + userid + "'"); 
+			 ResultSet res = getName.executeQuery();
+			 if(res.next()){
+				 return res.getInt("wins");
+		 }else return 0;
+		}
+		 
+		 public int getLose() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement getName = conn.prepareStatement("SELECT lose FROM level WHERE userid='" + userid + "'"); 
+			 ResultSet res = getName.executeQuery();
+			 if(res.next()){
+				 return res.getInt("lose");
+		 }else return 0;
+		}
+		 
+		 public int getTies() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement getName = conn.prepareStatement("SELECT ties FROM level WHERE userid='" + userid + "'"); 
+			 ResultSet res = getName.executeQuery();
+			 if(res.next()){
+				 return res.getInt("ties");
+		 }else return 0;
+		}
+		 
+		 public void addWin() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement state = conn.prepareStatement("UPDATE level SET wins=" + (wins + 1) + " WHERE userid = '" + userid + "';");
+			 state.execute();
+			 conn.close();
+		 }
+		 
+		 public void addLose() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement state = conn.prepareStatement("UPDATE level SET lose=" + (lose + 1) + " WHERE userid = '" + userid + "';");
+			 state.execute();
+			 conn.close();
+		 }
+		 
+		 public void addTie() throws Exception {
+			 Connection conn = getConnection();
+			 PreparedStatement state = conn.prepareStatement("UPDATE level SET ties=" + (ties + 1) + " WHERE userid = '" + userid + "';");
+			 state.execute();
+			 conn.close();
+		 }
+		 
 		 public void addLevel() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement state = conn.prepareStatement("UPDATE level SET level=" + (level + 1) + " WHERE userid = '" + userid + "';");
@@ -116,12 +170,10 @@ public class DBC {
 			 res.next();
 			 arr[0][0] = res.getString("userid");
 			 arr[0][1] = Integer.toString(res.getInt("correct"));
-			 System.out.println(res.getString("userid") + " : " + res.getInt("correct"));
 			 for(int x = 0; x < 5; x++) {
 				 res.next();
 				 arr[x][0] = res.getString("userid");
 				 arr[x][1] = Integer.toString(res.getInt("correct"));
-				 System.out.println(res.getString("userid") + " : " + res.getInt("correct"));
 			 }
 			 res.first();
 			 rank = 1;
