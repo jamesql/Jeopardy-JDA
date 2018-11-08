@@ -50,6 +50,7 @@ public class ChalListener extends ListenerAdapter {
 	
 	EmbedBuilder eb1 = new EmbedBuilder();
 	EmbedBuilder eb2 = new EmbedBuilder();
+	EmbedBuilder eb3 = new EmbedBuilder();
 	
 	public ChalListener(User p1, User p2, MessageChannel ch, JDA self, int cat) throws IOException, InvalidSyntaxException {
 		player1 = p1;
@@ -75,6 +76,8 @@ public class ChalListener extends ListenerAdapter {
 		eb1.setAuthor("Question", null, null);
 		eb1.setColor(Color.CYAN);
 		eb1.setTitle("Jeopardy Challenge");
+		eb1.addField("Category", question.ctgName, false);
+		eb1.addField("Difficulty", question.getDif(), false);
 		eb1.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
 		channel.sendMessage(eb1.build()).queue(m -> {
 			List<Emote> emote = mainGuild.getEmotes();
@@ -102,19 +105,32 @@ public class ChalListener extends ListenerAdapter {
 	public void validate() {
 		// tie
 		if (right1 && right2) {
-			System.out.println("Tie");
+			eb3.setAuthor("Challenge Results", null, null);
+			eb3.setColor(Color.CYAN);
+			eb3.setTitle("Jeopardy Challenge");
+			eb3.addField("It's a tie!", "Good job " + player1.getAsMention() + " & " + player2.getAsMention() + "!", false);
 		}
 		if (right1 && !right2) {
-			System.out.println("Player 1 wins");
+			eb3.setAuthor("Challenge Results", null, null);
+			eb3.setColor(Color.CYAN);
+			eb3.setTitle("Jeopardy Challenge");
+			eb3.addField(player1.getName() + " Wins!", "Better luck next time " + player2.getAsMention() + "!", false);
 		}
 		
 		if (!right1 && right2) {
-			System.out.println("Player 2 wins");
+			eb3.setAuthor("Challenge Results", null, null);
+			eb3.setColor(Color.CYAN);
+			eb3.setTitle("Jeopardy Challenge");
+			eb3.addField(player2.getName() + " Wins!", "Better luck next time " + player1.getAsMention() + "!", false);
 		}
 		// Both Lose
 		if (!right1 && !right2) {
-			System.out.println("everyone loses");
+			eb3.setAuthor("Challenge Results", null, null);
+			eb3.setColor(Color.CYAN);
+			eb3.setTitle("Jeopardy Challenge");
+			eb3.addField("Everyone loses!", "Better luck next time " + player1.getAsMention() + " & " + player2.getAsMention() + "!", false);
 		}
+		channel.sendMessage(eb3.build()).queue();
 	}
 
 	
@@ -141,41 +157,33 @@ public class ChalListener extends ListenerAdapter {
 			}
 			
 			if(eu.getId().equals(player1.getId())) {
-				System.out.println("Player 1 used");
 				if (ready1 && sent) {
 					if (!answered1) {
 						answered1 = true;
 						if(reaction.getId().equals(global)){ 
-							System.out.println("Player 1 correct");
 							right1 = true;
 						}
 					}
 				}
 				if (!ready1) {
-					System.out.println("ready1 false");
 					if (reaction.getId().equals(aVar)) {
 						ready1 = true;
-						System.out.println("player 1 ready now");
 					}
 				}
 			}
 			
 			if(eu.getId().equals(player2.getId())) {
-				System.out.println("Player 2 used");
 				if (ready2 && sent) {
 					if (!answered2) {
 						answered2 = true;
 						if(reaction.getId().equals(global)){ 
-							System.out.println("Player 2 correct");
 							right2 = true;
 						}
 					}
 				}
 				if (!ready2) {
-					System.out.println("ready2 false");
 					if (reaction.getId().equals(aVar)) {
 						ready2 = true;
-						System.out.println("player 2 ready now");
 					}
 				}
 			}
