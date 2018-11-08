@@ -26,6 +26,9 @@ public class DBC {
 			userid = user;
 			level = getLevel();
 			correct = getCorrect();
+			wins = getWin();
+			lose = getLose();
+			ties = getTies();
 			
 		}
 		
@@ -127,7 +130,7 @@ public class DBC {
 		 
 		 public int getTies() throws Exception {
 			 Connection conn = getConnection();
-			 PreparedStatement getName = conn.prepareStatement("SELECT ties FROM level WHERE userid='" + userid + "'"); 
+			 PreparedStatement getName = conn.prepareStatement("SELECT tie FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
 			 if(res.next()){
 				 return res.getInt("ties");
