@@ -48,7 +48,7 @@ public class DBC {
 	 public Connection getConnection() throws Exception{
 		  try{
 		   String driver = "com.mysql.jdbc.Driver";
-		   String url = "jdbc:mysql://localhost:3306/jep";
+		   String url = "jdbc:mysql://localhost:3306/jep?autoReconnect=true&useSSL=false";
 		   String username = "root";
 		   String password = "JagroshSucks1337";
 		   Class.forName(driver);
@@ -63,31 +63,40 @@ public class DBC {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT userid FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.first()) return res.getString("userid"); 
+			 try{if(res.first()) return res.getString("userid"); 
 				 else return null;
+			 }finally{
+				 conn.close();
+			 }
 		 }
 		 
 		 public int getLevel() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT level FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
+			 try{if(res.next()){
 				 return res.getInt("level");
-		 }else return 0;
+			 }else return 0;
+			 	}finally{
+			 		conn.close();
+			 	}
 		}
 		 
 		 public int getCorrect() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT correct FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
+			 try{if(res.next()){
 				 return res.getInt("correct");
-		 }else return 0;
+			 }else return 0;
+			 	}finally{
+			 		conn.close();
+			 	}
 		}
 		 
 		 public void inputUser() throws Exception {
 			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid,wins,lose,ties) VALUES (0,0," + userid + ",0,0,0)");
+			 PreparedStatement state = conn.prepareStatement("INSERT INTO level (level,correct,userid,wins,lose,tie) VALUES (0,0," + userid + ",0,0,0)");
 			 state.execute();
 			 conn.close();
 		 }
@@ -114,28 +123,37 @@ public class DBC {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT wins FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
+			 try{if(res.next()){
 				 return res.getInt("wins");
-		 }else return 0;
+			 }else return 0;
+			 	}finally{
+			 		conn.close();
+			 	}
 		}
 		 
 		 public int getLose() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT lose FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
+			 try{if(res.next()){
 				 return res.getInt("lose");
-		 }else return 0;
+			 }else return 0;
+			 	}finally{
+			 		conn.close();
+			 	}
 		}
 		 
 		 public int getTies() throws Exception {
 			 Connection conn = getConnection();
 			 PreparedStatement getName = conn.prepareStatement("SELECT tie FROM level WHERE userid='" + userid + "'"); 
 			 ResultSet res = getName.executeQuery();
-			 if(res.next()){
+			 try{if(res.next()){
 				 return res.getInt("tie");
-		 }else return 0;
-		}
+			 }else return 0;
+			 	}finally{
+			 		conn.close();
+			 	}
+		 }
 		 
 		 public void addWin() throws Exception {
 			 Connection conn = getConnection();
@@ -153,7 +171,7 @@ public class DBC {
 		 
 		 public void addTie() throws Exception {
 			 Connection conn = getConnection();
-			 PreparedStatement state = conn.prepareStatement("UPDATE level SET ties=" + (ties + 1) + " WHERE userid = '" + userid + "';");
+			 PreparedStatement state = conn.prepareStatement("UPDATE level SET tie=" + (ties + 1) + " WHERE userid = '" + userid + "';");
 			 state.execute();
 			 conn.close();
 		 }
