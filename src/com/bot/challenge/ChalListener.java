@@ -48,10 +48,13 @@ public class ChalListener extends ListenerAdapter {
 	boolean sent = false;
 	boolean right1 = false;
 	boolean right2 = false;
+	boolean finished = false;
 	
 	EmbedBuilder eb1 = new EmbedBuilder();
 	EmbedBuilder eb2 = new EmbedBuilder();
 	EmbedBuilder eb3 = new EmbedBuilder();
+	EmbedBuilder eb4 = new EmbedBuilder();
+	EmbedBuilder eb5 = new EmbedBuilder();
 	
 	public ChalListener(User p1, User p2, MessageChannel ch, JDA self, int cat) throws IOException, InvalidSyntaxException {
 		player1 = p1;
@@ -74,11 +77,12 @@ public class ChalListener extends ListenerAdapter {
 		answers[3] = question.incAnswer[2];
 		List<String> a = Arrays.asList(answers);
 		Collections.shuffle(a);
-		eb1.setAuthor("Question", null, null);
+		eb1.setAuthor("Jeopardy Challenge", null, null);
 		eb1.setColor(Color.CYAN);
-		eb1.setTitle("Jeopardy Challenge");
+		eb1.setTitle(player1.getName() + " V " + player2.getName());
 		eb1.addField("Category", question.ctgName, false);
 		eb1.addField("Difficulty", question.getDif(), false);
+		eb1.addField("Question", question.question, false);
 		eb1.setFooter("Get Thinking!", null);
 		eb1.addField("Choices", "A : " + a.get(0) + "\nB : " + a.get(1) + "\nC : " + a.get(2) + "\nD : " + a.get(3) + "\n", false);
 		channel.sendMessage(eb1.build()).queue(m -> {
@@ -97,15 +101,17 @@ public class ChalListener extends ListenerAdapter {
 	
 	public void sendReadyResponse() {
 		eb2.setTitle("Challenge has been started");
-		eb2.addField("How to accept", "React when ready!", false);
+		eb2.addField("How to accept", "React with the A button to accept\nReact with the B button to decline/cancel", false);
 		eb2.setFooter("Get Thinking!", null);
 		channel.sendMessage(eb2.build()).queue(m -> {
 			List<Emote> emote = mainGuild.getEmotes();
 			m.addReaction(emote.get(0)).queue();
+			m.addReaction(emote.get(2)).queue();
 		});
 	}
 	
 	public void validate() throws Exception {
+		finished = true;
 		DBC player1db = new DBC(player1.getId());
 		DBC player2db = new DBC(player2.getId());
 		// tie
@@ -145,6 +151,20 @@ public class ChalListener extends ListenerAdapter {
 		eb3.setFooter("Get Thinking!", null);
 		channel.sendMessage(eb3.build()).queue();
 	}
+	
+	public void cancelp1() {
+		eb4.setTitle("Challenge Cancelled");
+		eb4.addField("Game Cancelled", "Cancelled by : " + player1.getName(), false);
+		eb4.setFooter("Get Thinking!", null);
+		channel.sendMessage(eb4.build()).queue();
+	}
+	
+	public void cancelp2() {
+		eb5.setTitle("Challenge Cancelled");
+		eb5.addField("Game Cancelled", "Cancelled by : " + player1.getName(), false);
+		eb5.setFooter("Get Thinking!", null);
+		channel.sendMessage(eb5.build()).queue();
+	}
 
 	
 	@Override
@@ -169,7 +189,13 @@ public class ChalListener extends ListenerAdapter {
 			   		break;
 			}
 			
+			
 			if(eu.getId().equals(player1.getId())) {
+				if (reaction.getId().equals(bVar) && !sent) {
+					cancelp1();
+					finished =  true;
+				}
+				
 				if (ready1 && sent) {
 					if (!answered1) {
 						answered1 = true;
@@ -186,6 +212,10 @@ public class ChalListener extends ListenerAdapter {
 			}
 			
 			if(eu.getId().equals(player2.getId())) {
+				if (reaction.getId().equals(bVar) && !sent) {
+					cancelp2();
+					finished =  true;
+				}
 				if (ready2 && sent) {
 					if (!answered2) {
 						answered2 = true;
@@ -202,7 +232,7 @@ public class ChalListener extends ListenerAdapter {
 			}
 			
 			
-			if (ready1 && ready2 && !sent) {
+			if (ready1 && ready2 && !sent && !finished) {
 				try {
 					sendQuestion();
 				} catch (IOException e) {
@@ -212,7 +242,7 @@ public class ChalListener extends ListenerAdapter {
 				}
 			}
 			
-			if (answered1 && answered2) {
+			if (answered1 && answered2 && !finished) {
 				try {
 					validate();
 				}catch (Exception e){e.printStackTrace();}
