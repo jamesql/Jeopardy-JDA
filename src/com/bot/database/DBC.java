@@ -187,6 +187,7 @@ public class DBC {
 			 Connection conn = getConnection();
 			 PreparedStatement state = conn.prepareStatement("SELECT correct,userid FROM level ORDER BY -correct");
 			 ResultSet res = state.executeQuery();
+			 try{
 			 res.beforeFirst();
 			 res.next();
 			 arr[0][0] = res.getString("userid");
@@ -207,7 +208,8 @@ public class DBC {
 				}else{
 				currentId = res.getString("userid");
 				rank++;
-			 }
-		 } 
-	}
+					}
+			 	} 
+			 }finally{conn.close();}
+		 }
 }
